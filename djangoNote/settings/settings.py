@@ -10,18 +10,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+import environ
 from pathlib import Path
 from platform import system as sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+# reading .env file
+env = environ.Env()
+environ.Env.read_env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+oy$&q$9t$fti=$suv2=r1yv#nm#0$%8anap1a+w1zu%r$(%#l'
+SECRET_KEY = env("SECRET_KEY")
 
 # Dev, Prd, Test
 ENV = os.getenv("DJANGO_ENV", "dev")
@@ -87,9 +91,13 @@ WSGI_APPLICATION = 'djangoNote.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "NAME": env("DATABASE_NAME"),
+        "ENGINE": "django.db.backends.postgresql",
+        "USER": env("DATABASE_USER"),
+        "PASSWORD": env("DATABASE_PASSWORD"),  # Password
+        "HOST": env("DATABASE_HOST"),  # Database Address (IP)
+        "PORT": env("DATABASE_PORT"),  # Database Port
     }
 }
 

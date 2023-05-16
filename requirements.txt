@@ -1,0 +1,7 @@
+asgiref @ file:///home/conda/feedstock_root/build_artifacts/asgiref_1671589829431/work
+Django @ file:///home/conda/feedstock_root/build_artifacts/django_1683130392307/work
+django-environ==0.4.5
+psycopg2 @ file:///Users/runner/miniforge3/conda-bld/psycopg2-split_1672159307304/work
+six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
+sqlparse @ file:///home/conda/feedstock_root/build_artifacts/sqlparse_1681817562700/work
+typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1678559861143/work
