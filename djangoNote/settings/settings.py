@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+from platform import system as sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -22,10 +23,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-+oy$&q$9t$fti=$suv2=r1yv#nm#0$%8anap1a+w1zu%r$(%#l'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Dev, Prd, Test
+ENV = os.getenv("DJANGO_ENV", "dev")
+LOCAL = True if sys().lower().startswith("darwin") or sys().lower().startswith("Windows") else False
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: don't run with debug turned on in production!
+if ENV == "prd":
+    DEBUG = False
+else:
+    DEBUG = True
+
+if ENV == "prd":
+    ALLOWED_HOSTS = ["abc@gmail.com"]
+else:
+    ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -123,3 +134,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+""" ADDITIONAL CONFIG """
+# ADMINS = [("seongha", "seongha@abc.com")]  # https://docs.djangoproject.com/en/4.1/ref/logging/#django.utils.log.AdminEmailHandler
+# APPEND_SLASH = True  # CommonMiddleware
+# PREPEND_WWW = True  # CommonMiddleware
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#     }
+# }
+# DEFAULT_FROM_EMAIL = "seongha@abc.com"
+# https://docs.djangoproject.com/en/4.1/ref/settings/
