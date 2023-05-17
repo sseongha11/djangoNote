@@ -4,13 +4,16 @@
 {% block title %}
 {{title}}
 {% endblock %}
+{% block head %}
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+{% endblock %}
 
 {% block body %}
 <body>
     {% include 'include.html' %}
     Hello Django!
     <p>{{ user_id }}</p>
-    <p>{{ date_joined|date:"d-m-Y" }}</p>
+    <p>{{ date_joined|date:"Y-m-d" }}</p>
     <p>{{ category_list|first }}</p>
     {% for i in category_list %}
     <p style="color: red;">{{i|add:19}}</p>
