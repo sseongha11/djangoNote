@@ -26,6 +26,7 @@ DATABASE_USER = env("DATABASE_USER")
 DATABASE_PASSWORD = env("DATABASE_PASSWORD")
 DATABASE_HOST = env("DATABASE_HOST")
 DATABASE_PORT = env("DATABASE_PORT")
+DATABASE_ENGINE = "django.db.backends.postgresql"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -99,7 +100,7 @@ WSGI_APPLICATION = 'djangoNote.wsgi.application'
 DATABASES = {
     "default": {
         "NAME": DATABASE_NAME,
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": DATABASE_ENGINE,
         "USER": DATABASE_USER,
         "PASSWORD": DATABASE_PASSWORD,  # Password
         "HOST": DATABASE_HOST,  # Database Address (IP)
