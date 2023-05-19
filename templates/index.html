@@ -21,23 +21,27 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <button class="btn btn-sm btn-outline-dark" type="button" data-bs-toggle="modal" data-bs-target="#newNoteModal">
-             Create the New Note
+              Create a New Note
             </button>
           </li>
         </ul>
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+        <div class="dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="https://picsum.photos/40" class="img-avatar" alt="..." style="border-radius: 50%;">
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
           </ul>
+        </div>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+
       </div>
+
     </div>
   </nav>
 
@@ -115,7 +119,7 @@
           </div>
           <div class="modal-footer">
             <div class="me-auto">
-              <button class="btn btn-link text-sm font-semibold" @click="addImagesButtonClicked"><i class="bi bi-cloud-upload"></i> Attach an Image</button>
+              <button class="btn btn-link text-sm font-semibold" @click="addImagesButtonClicked"><i class="bi bi-cloud-upload"></i> Attach Images</button>
               <input class="form-control d-none" type="file" id="formFile" @change="addImage">
             </div>
             <button type="button" class="btn btn-sm btn-neutral" data-bs-dismiss="modal" @click="addNote">Save</button>
@@ -132,7 +136,7 @@
           </div>
           <div class="modal-body">
             <select class="form-select" aria-label="Default select example">
-              <option selected>Select a Category</option>
+              <option selected>Category Selection</option>
               <option v-for="category in categories" :value="category.id">[[category.name]]</option>
             </select>
           </div>
