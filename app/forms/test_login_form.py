@@ -3,25 +3,21 @@ import re
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 
 from app.models import UserDetail
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'class': 'form-control'}), error_messages={
-        'invalid': 'This is not a correct email~~',
-    })
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}), label='Password')
-
-    def clean(self):
-        email = self.cleaned_data.get("email")
-
-        if email and email.split("@")[1] == "gmail.com":
-            self.add_error('email', "Gmail is not available.")
+    email_or_username = forms.CharField(
+        label="Email_USERNAME",
+        widget=forms.TextInput(attrs={"class": "form-control"}),
+    )
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"class": "form-control"}), label="Password")
 
 
 class SignupForm(UserCreationForm):
@@ -31,19 +27,19 @@ class SignupForm(UserCreationForm):
     )
     email = forms.EmailField(
         label="Email",
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Email address"}),
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Email Address"}),
         error_messages={
-            "invalid": "This is not a valid format.",
+            "invalid": "This is not correct email address.",
         },
     )
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Password"}), label="Password1"
     )
     password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Confirm Password"}),
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Check Password"}),
         label="Password2",
         error_messages={
-            "password_mismatch": "Ths password is not the same one.",
+            "password_mismatch": "The password is not identical.",
         },
     )
 
@@ -60,13 +56,13 @@ class SignupForm(UserCreationForm):
         username = self.cleaned_data.get("username")
 
         if not re.match("^[a-z0-9_]*$", username):
-            self.add_error("username", "lower cases, numbers and _ (underscore) only could be used.")
+            self.add_error("username", "Lowercase, number and underscore(_) only can used.")
 
         if self.cleaned_data.get("password") is not None:
             try:
                 validate_password(self.cleaned_data.get("password"))
             except ValidationError as e:
-                self.add_error("password1", "Please check your password.")
+                self.add_error("password1", "This password is not appropriate.")
         email = self.cleaned_data.get("email")
         user = get_user_model()
         if email is not None:
