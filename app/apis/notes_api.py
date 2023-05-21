@@ -51,9 +51,9 @@ def get_or_create_notes(request):
         )
     elif request.method == "POST":
         body = json.loads(request.body)
-        get_category, _ = Category.objects.get_or_create(user=request.user, name="default")
+        get_category, _ = Category.objects.get_or_create(user=request.user, name="TBD")
         if not get_category:
-            Category.objects.create(user=request.user, name="default")
+            Category.objects.create(user=request.user, name="TBD")
         new_note = Note.objects.create(category=get_category, user=request.user, **body)
         note = Note.objects.filter(id=new_note.id).values(
             "id", "title", "content", "image", "category_id", "created_at", "category__name"
