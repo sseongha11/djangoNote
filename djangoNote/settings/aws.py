@@ -1,15 +1,15 @@
 from djangoNote.settings.settings import DEBUG, BASE_DIR
 import boto3
 from storages.backends.s3boto3 import S3Boto3Storage
+from dotenv import load_dotenv, dotenv_values
 
-import environ
+ENV_LOC = BASE_DIR / "djangoNote_note/settings/.env"
+ENV_LOAD = load_dotenv(ENV_LOC)
 
-# reading .env file
-env = environ.Env()
-environ.Env.read_env()
-
-AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+if ENV_LOAD:
+    config = dotenv_values(ENV_LOC)
+    AWS_ACCESS_KEY_ID = config.get("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = config.get("AWS_SECRET_ACCESS_KEY")
 
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 

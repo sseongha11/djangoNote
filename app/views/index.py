@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.views.decorators.cache import cache_page
 
 from app.forms.test_login_form import LoginForm, SignupForm
 
@@ -68,11 +69,11 @@ def user_login(request):
 
             user = User.objects.filter(Q(email=email_or_username) | Q(username=email_or_username)).first()
             if not user:
-                msg = "The information about login is not correct."
+                msg = "Please check your information."
             else:
                 valid_password = check_password(password, user.password)
                 if not valid_password:
-                    msg = "The information about login is not correct."
+                    msg = "Please check your information."
                 else:
                     login(request, user)
                     return redirect("index")
@@ -80,10 +81,46 @@ def user_login(request):
         if request.user.is_authenticated:
             return redirect("index")
         form = LoginForm()
-
     return render(request, "login.html", {"form": form, "msg": msg})
 
 
 def user_logout(request):
     logout(request)
+
     return redirect("login")
+
+
+def cache_test(request):
+    from django.shortcuts import render
+    from django.core.cache import cache
+
+    user = cache.get("user_query_cache")
+    if user is None:
+        user = User.objects.all()
+        cache.set("user_query_cache", user, 3600)
+        print("query executed!!!!!!")
+
+    # Perform the expensive database query here
+    return render(request, "cache_test.html", {"user": user})
+
+
+# @cache_page(3600)
+def cache_test2(request):
+    result = dict(
+        title="CacheTest",
+        user_id=1,
+        date_joined=datetime(2022, 1, 1, 0, 0, 0),
+    )
+    return render(request, "cache_test2.html", {"result": result})
+
+
+def send_email(request):
+    from django.core.mail import send_mail
+
+    subject = "Hello"
+    message = "Testing the mail"
+    from_email = "rise.ryan.lee@gmail.com"
+    to_list = ["light.tosser@gmail.com"]
+    send_mail(subject, message, from_email, to_list)
+    # https://aws.amazon.com/ko/premiumsupport/knowledge-center/ses-set-up-connect-smtp/
+    return redirect("index")

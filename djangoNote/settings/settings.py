@@ -10,29 +10,40 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
-import environ
+import platform
 from pathlib import Path
 from platform import system as sys
+
+from dotenv import load_dotenv, dotenv_values
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# reading .env file
-env = environ.Env()
-environ.Env.read_env()
+# Environment setup
+ENV_LOC = BASE_DIR / "djangoNote/settings/.env"
+ENV_LOAD = load_dotenv(ENV_LOC)
 
-DATABASE_NAME = env("DATABASE_NAME")
-DATABASE_USER = env("DATABASE_USER")
-DATABASE_PASSWORD = env("DATABASE_PASSWORD")
-DATABASE_HOST = env("DATABASE_HOST")
-DATABASE_PORT = env("DATABASE_PORT")
-DATABASE_ENGINE = "django.db.backends.postgresql"
+if ENV_LOAD:
+    config = dotenv_values(ENV_LOC)
+    DATABASE_NAME = config.get("DATABASE_NAME")
+    DATABASE_USER = config.get("DATABASE_USER")
+    DATABASE_PASSWORD = config.get("DATABASE_PASSWORD")
+    DATABASE_HOST = config.get("DATABASE_HOST")
+    DATABASE_PORT = config.get("DATABASE_PORT")
+    DATABASE_ENGINE = "django.db.backends.postgresql"
+else:
+    DATABASE_NAME = os.environ.get("DATABASE_NAME")
+    DATABASE_USER = os.environ.get("DATABASE_USER")
+    DATABASE_PASSWORD = os.environ.get("DATABASE_PASSWORD")
+    DATABASE_HOST = os.environ.get("DATABASE_HOST")
+    DATABASE_PORT = os.environ.get("DATABASE_PORT")
+    DATABASE_ENGINE = "django.db.backends.postgresql"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = config.get("SECRET_KEY")
 
 # Dev, Prd, Test
 ENV = os.getenv("DJANGO_ENV", "dev")
@@ -58,7 +69,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app'
+    'app',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +96,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "app.context_processor.renderer",
             ],
         },
     },
@@ -105,6 +117,13 @@ DATABASES = {
         "PORT": DATABASE_PORT,  # Database Port
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -147,9 +166,53 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+if DEBUG:
+    LOGIN_URL = "/login"
+else:
+    LOGIN_URL = "/production/login"
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+if DEBUG:
+    LOGIN_URL = "/login"
+else:
+    LOGIN_URL = "/production/login"
+
+
+CACHES = {
+    # python manage.py createcachetable
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "cache_table",
+    }
+}
+
+# Local Memory
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+#     }
+# }
+
+# Redis
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",  # 1번 DB
+#         "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+#     },
+# }
+
+
+# File-based cache
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'LOCATION': BASE_DIR / 'django_cache',
+#     }
+# }
 
 """ ADDITIONAL CONFIG """
-# ADMINS = [("seongha", "seongha@abc.com")]  # https://docs.djangoproject.com/en/4.1/ref/logging/#django.utils.log.AdminEmailHandler
+# ADMINS = [("ryan", "ryan@abc.com")]  # https://docs.djangoproject.com/en/4.1/ref/logging/#django.utils.log.AdminEmailHandler
 # APPEND_SLASH = True  # CommonMiddleware
 # PREPEND_WWW = True  # CommonMiddleware
 # CACHES = {
@@ -157,5 +220,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
 #     }
 # }
-# DEFAULT_FROM_EMAIL = "seongha@abc.com"
+# DEFAULT_FROM_EMAIL = "ryan@abc.com"
 # https://docs.djangoproject.com/en/4.1/ref/settings/

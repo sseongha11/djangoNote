@@ -23,23 +23,23 @@ class LoginForm(forms.Form):
 class SignupForm(UserCreationForm):
     username = forms.CharField(
         label="Username",
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Username"}),
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "User Name"}),
     )
     email = forms.EmailField(
         label="Email",
         widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Email Address"}),
         error_messages={
-            "invalid": "This is not correct email address.",
+            "invalid": "This is not an appropriate email.",
         },
     )
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Password"}), label="Password1"
     )
     password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Check Password"}),
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Check the password"}),
         label="Password2",
         error_messages={
-            "password_mismatch": "The password is not identical.",
+            "password_mismatch": "Please check your information.",
         },
     )
 
@@ -56,23 +56,23 @@ class SignupForm(UserCreationForm):
         username = self.cleaned_data.get("username")
 
         if not re.match("^[a-z0-9_]*$", username):
-            self.add_error("username", "Lowercase, number and underscore(_) only can used.")
+            self.add_error("username", "소문자와, 숫자, 언더스코어(_) 만 사용가능!")
 
         if self.cleaned_data.get("password") is not None:
             try:
                 validate_password(self.cleaned_data.get("password"))
             except ValidationError as e:
-                self.add_error("password1", "This password is not appropriate.")
+                self.add_error("password1", "This is not a correct one. Please check the requirements")
         email = self.cleaned_data.get("email")
         user = get_user_model()
         if email is not None:
             dupe_date = user.objects.filter(email=email).exists()
             if dupe_date:
-                self.add_error("email", "Please check your email.")
+                self.add_error("email", "Please check your information about email or username.")
 
         dupe_date = user.objects.filter(username=username).exists()
         if dupe_date:
-            self.add_error("username", "Please check your information.")
+            self.add_error("username", "Please check your information about email or username.")
 
     def save(self, commit=True):
         user = super().save(commit=False)
