@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+
+import json
 import os
 import platform
 from pathlib import Path
@@ -20,30 +22,28 @@ from dotenv import load_dotenv, dotenv_values
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Environment setup
-ENV_LOC = BASE_DIR / "djangoNote/settings/.env"
-ENV_LOAD = load_dotenv(ENV_LOC)
+try:
+    ENV_FILE = json.load(open(os.path.join(BASE_DIR, "keys.json")))
+except FileNotFoundError:
+    ENV_LOC = BASE_DIR / "djangoNote/settings/.env"
+    ENV_LOAD = load_dotenv(ENV_LOC)
+    ENV_FILE = dotenv_values(ENV_LOC)
 
-if ENV_LOAD:
-    config = dotenv_values(ENV_LOC)
-    DATABASE_NAME = config.get("DATABASE_NAME")
-    DATABASE_USER = config.get("DATABASE_USER")
-    DATABASE_PASSWORD = config.get("DATABASE_PASSWORD")
-    DATABASE_HOST = config.get("DATABASE_HOST")
-    DATABASE_PORT = config.get("DATABASE_PORT")
-    DATABASE_ENGINE = "django.db.backends.postgresql"
-else:
-    DATABASE_NAME = os.environ.get("DATABASE_NAME")
-    DATABASE_USER = os.environ.get("DATABASE_USER")
-    DATABASE_PASSWORD = os.environ.get("DATABASE_PASSWORD")
-    DATABASE_HOST = os.environ.get("DATABASE_HOST")
-    DATABASE_PORT = os.environ.get("DATABASE_PORT")
-    DATABASE_ENGINE = "django.db.backends.postgresql"
+# if ENV_LOAD:
+#     config = dotenv_values(ENV_LOC)
+#     DB_USER = config.get("DB_USER")
+#     DB_PASS = config.get("DB_PASS")
+#     DB_HOST = config.get("DB_HOST")
+# else:
+#     DB_USER = os.environ.get("DB_USER")
+#     DB_PASS = os.environ.get("DB_PASS")
+#     DB_HOST = os.environ.get("DB_HOST")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config.get("SECRET_KEY")
+SECRET_KEY = "django-insecure-+oy$&q$9t$fti=$suv2=r1yv#nm#0$%8anap1a+w1zu%r$(%#l"
 
 # Dev, Prd, Test
 ENV = os.getenv("DJANGO_ENV", "dev")
@@ -109,12 +109,12 @@ WSGI_APPLICATION = 'djangoNote.wsgi.application'
 
 DATABASES = {
     "default": {
-        "NAME": DATABASE_NAME,
-        "ENGINE": DATABASE_ENGINE,
-        "USER": DATABASE_USER,
-        "PASSWORD": DATABASE_PASSWORD,  # Password
-        "HOST": DATABASE_HOST,  # Database Address (IP)
-        "PORT": DATABASE_PORT,  # Database Port
+        "NAME": "note_hub",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "USER": ENV_FILE.get("DB_USER"),
+        "PASSWORD": ENV_FILE.get("DB_PASS"),  # Password
+        "HOST": ENV_FILE.get("DB_HOST"),  # Database Address (IP)
+        "PORT": 25060,  # Database Port,
     }
 }
 
