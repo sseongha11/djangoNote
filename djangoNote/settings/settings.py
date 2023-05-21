@@ -165,14 +165,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 if DEBUG:
     LOGIN_URL = "/login"
 else:
-    LOGIN_URL = "/production/login"
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-if DEBUG:
     LOGIN_URL = "/login"
-else:
-    LOGIN_URL = "/production/login"
-
 
 CACHES = {
     # python manage.py createcachetable
