@@ -55,10 +55,7 @@ if ENV == "prd":
 else:
     DEBUG = True
 
-if ENV == "prd":
-    ALLOWED_HOSTS = ["abc@gmail.com"]
-else:
-    ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -87,8 +84,7 @@ ROOT_URLCONF = 'djangoNote.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

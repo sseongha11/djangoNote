@@ -6,7 +6,6 @@ on:
 
   workflow_dispatch:
 
-
 jobs:
   deploy:
     name: Deploying to Google Cloud
@@ -24,7 +23,6 @@ jobs:
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASS: ${{ secrets.DB_PASS }}
-
 
     - run: cat keys.json
     - name: Deploy to App Engine
