@@ -182,6 +182,7 @@
           notes: [],
           componentKey: 0,
           nextNoteId: 111,
+          currentNoteId:0
       },
       mounted() {
           const modal = document.getElementById("createCategoryModal");
@@ -332,7 +333,7 @@
                 <!-- Actions -->
                 <div class="mx-n1 mt-5">
                   <span class="badge bg-${color}">${m.category__name}</span>
-                  <button href="#" class="btn btn-square btn-sm btn-light rounded-circle mx-1" data-bs-toggle="modal" data-bs-target="#selectCategoryModal">
+                  <button onclick="vue.storeNoteId(${m.id})" class="btn btn-square btn-sm btn-light rounded-circle mx-1" data-bs-toggle="modal" data-bs-target="#selectCategoryModal">
                     <span class="svg-icon">
                      <i class="bi bi-archive"></i>
                     </span>
@@ -351,9 +352,13 @@
               </div>
             </div>`
         },
+          storeNoteId: function (noteId) {
+                this.currentNoteId = noteId;
+          },
         updateCategory: function () {
          const categoryUpdate = document.getElementById("categorySelection");
-         const noteId = this.notes[0].id;
+
+         let noteId = this.currentNoteId
 
          axios.put(this.prefix + '/api/notes/' + noteId,{
              category: categoryUpdate.value
