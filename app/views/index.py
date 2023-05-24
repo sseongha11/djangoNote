@@ -26,7 +26,7 @@ def index(request):
         form = LoginForm()
 
     rendering_info = dict(
-        title="Home",
+        title="LBORO",
         user_id=1,
         date_joined=datetime(2022, 1, 1, 0, 0, 0),
         category_list=[1, 2, 3],
